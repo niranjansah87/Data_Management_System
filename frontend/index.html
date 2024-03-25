@@ -8,16 +8,26 @@
 </head>
 <body>
     <div class="container">
-        <h1>Data management system</h1>
-        <div class="form">
-            <form action="#" method="post" enctype="multipart/form-data">
-                <label for="date">Enter Date</label><br>
-                <input type="date" name="date" id="date">
-                <button type="submit" name="submit">Submit</button>
-            </form>
+        <div class="form-title">
+            Data management system
+        </div>
+        <div class="form-input">
+          <label for="username">Enter Date</label>
+          <input type="date" id="date">
+          
+        </div>
+        <div class="form-input">
+          <label for="password">Password</label>
+          <input type="password" id="password">
         </div>
         
-    </div>
+        <div class="form-input">
+          <button id="submit" value="submit">Submit</button>
+        </div>
+      </div>
+      <!-- partial -->
+        <script src='https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>
+        <script  src="./main.js"></script>
 </body>
-<script src="main.js"></script>
+
 </html>
