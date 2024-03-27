@@ -18,19 +18,41 @@ router.post("/insert", async (req, res) => {
 
 // Route 2: Get data by date and words
 router.get("/search", async (req, res) => {
-  const { date, words } = req.query; // Assuming date and words are sent as query parameters
-
-  try {
-    const results = await dataModel.getDataByDateWords(date, words);
-    if (results.length === 0) {
-      res.status(200).send('No data found for the provided search criteria.');
-    } else {
-      res.status(200).send(results); // Send the retrieved data
+    const { date, words } = req.body;
+  
+    try {
+      // Check if either date or words is provided
+      if (!date && !words) {
+        throw new Error('Date or words must be provided.');
+      }
+  
+      let query = "SELECT * FROM data WHERE ";
+      const params = [];
+  
+      if (date) {
+        query += "date = ? ";
+        params.push(date);
+      }
+  
+      if (words) {
+        if (date) {
+          query += "AND ";
+        }
+        query += "words = ? ";
+        params.push(words);
+      }
+  
+      const results = await dataModel.getDataByDateWords(query, params);
+      if (results.length === 0) {
+        res.status(200).send('No data found for the provided search criteria.');
+      } else {
+        res.status(200).send(results);
+      }
+    } catch (error) {
+      console.error('Error retrieving data:', error);
+      res.status(500).send('Internal server error');
     }
-  } catch (error) {
-    console.error('Error retrieving data:', error);
-    res.status(500).send('Internal server error'); // Generic error message for now
-  }
-});
+  });
+  
 
 module.exports = router;
