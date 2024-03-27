@@ -1,27 +1,33 @@
-const express = require("express");
-const cors = require("cors");
+//Server.js
+const express = require('express');
+const bodyParser = require('body-parser');
+const mysql = require('mysql2/promise'); // Using mysql2/promise for improved error handling
+
+const dbConfig = require('./config/db.config'); // Configuration for database connection
 
 const app = express();
+const port = 3001;
 
-var corsOptions = {
-  origin: "http://localhost:5000"
-};
+// Create a connection pool for efficient database interactions
+const pool = mysql.createPool(dbConfig);
 
-app.use(cors(corsOptions));
+(async () => {
+  try {
+    // Attempt to connect to the database
+    const connection = await pool.getConnection();
+    console.log('Database connection established');
 
-// parse requests of content-type - application/json
-app.use(express.json());
+    // Release the connection back to the pool after successful execution
+    connection.release();
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+    // Define routes here (assuming they're in a separate file, e.g., routes/data.js)
+    app.use('/api', require('./routes/data'));
 
-// simple route
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
-});
-
-// set port, listen for requests
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.error('Error connecting to database:', error);
+    process.exit(1); // Exit the process on failure
+  }
+})(); // Immediately-Invoked Function Expression (IIFE) for cleaner code
