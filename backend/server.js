@@ -1,27 +1,31 @@
-//Server.js
 const express = require('express');
-const bodyParser = require('body-parser');
-const mysql = require('mysql2/promise'); // Using mysql2/promise for improved error handling
+const mysql = require('mysql2/promise');
+const router = require('./routes/data');
+require('dotenv').config();
 
-const dbConfig = require('./config/db.config'); // Configuration for database connection
-
-const app = express();
 const port = 3001;
+const app = express();
+
+// Middleware to parse JSON bodies
+app.use(express.json());
 
 // Create a connection pool for efficient database interactions
-const pool = mysql.createPool(dbConfig);
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
 
 (async () => {
   try {
     // Attempt to connect to the database
     const connection = await pool.getConnection();
     console.log('Database connection established');
-
-    // Release the connection back to the pool after successful execution
     connection.release();
 
     // Define routes here (assuming they're in a separate file, e.g., routes/data.js)
-    app.use('/api', require('./routes/data'));
+    app.use('/api', router);
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
@@ -30,4 +34,4 @@ const pool = mysql.createPool(dbConfig);
     console.error('Error connecting to database:', error);
     process.exit(1); // Exit the process on failure
   }
-})(); // Immediately-Invoked Function Expression (IIFE) for cleaner code
+})();
