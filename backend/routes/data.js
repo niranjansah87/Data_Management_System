@@ -17,42 +17,89 @@ router.post("/insert", async (req, res) => {
 });
 
 // Route 2: Get data by date and words
-router.get("/search", async (req, res) => {
-    const { date, words } = req.body;
+// router.get("/search", async (req, res) => {
+//     const { date, words } = req.body;
   
-    try {
-      // Check if either date or words is provided
-      if (!date && !words) {
-        throw new Error('Date or words must be provided.');
-      }
+//     try {
+//       // Check if either date or words is provided
+//       if (!date && !words) {
+//         throw new Error('Date or words must be provided.');
+//       }
   
-      let query = "SELECT * FROM data WHERE ";
-      const params = [];
+//       let query = "SELECT * FROM data WHERE ";
+//       const params = [];
   
-      if (date) {
-        query += "date = ? ";
-        params.push(date);
-      }
+//       if (date) {
+//         query += "date = ? ";
+//         params.push(date);
+//       }
   
-      if (words) {
-        if (date) {
-          query += "AND ";
-        }
-        query += "words = ? ";
-        params.push(words);
-      }
+//       if (words) {
+//         if (date) {
+//           query += "AND ";
+//         }
+//         query += "words = ? ";
+//         params.push(words);
+//       }
   
-      const results = await dataModel.getDataByDateWords(query, params);
-      if (results.length === 0) {
-        res.status(200).send('No data found for the provided search criteria.');
-      } else {
-        res.status(200).send(results);
-      }
-    } catch (error) {
-      console.error('Error retrieving data:', error);
-      res.status(500).send('Internal server error');
+//       const results = await dataModel.getDataByDateWords(query, params);
+//       if (results.length === 0) {
+//         res.status(200).send('No data found for the provided search criteria.');
+//       } else {
+//         res.status(200).send(results);
+//       }
+//     } catch (error) {
+//       console.error('Error retrieving data:', error);
+//       res.status(500).send('Internal server error');
+//     }
+//   });
+  
+
+
+
+
+
+  // Route 2: Search data by word
+router.get("/searchByWord", async (req, res) => {
+  const { words } = req.body;
+
+  try {
+    if (!words) {
+      throw new Error('Words must be provided for search.');
     }
-  });
-  
+
+    const results = await dataModel.getDataByDateWords('SELECT * FROM data WHERE words = ?', [words]);
+    if (results.length === 0) {
+      res.status(200).send('No data found for the provided word.');
+    } else {
+      res.status(200).send(results);
+    }
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// Route 3: Search data by date
+router.get("/searchByDate", async (req, res) => {
+  const { date } = req.body;
+
+  try {
+    if (!date) {
+      throw new Error('Date must be provided for search.');
+    }
+
+    const results = await dataModel.getDataByDateWords('SELECT * FROM data WHERE date = ?', [date]);
+    if (results.length === 0) {
+      res.status(200).send('No data found for the provided date.');
+    } else {
+      res.status(200).send(results);
+    }
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 module.exports = router;

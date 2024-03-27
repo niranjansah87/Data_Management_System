@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const router = require('./routes/data');
+const cors = require('cors'); // Import cors middleware
 require('dotenv').config();
 
 const port = 3001;
@@ -16,6 +17,9 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME
 });
+
+// Enable CORS for all routes
+app.use(cors());
 
 (async () => {
   try {

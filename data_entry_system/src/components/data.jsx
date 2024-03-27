@@ -1,24 +1,38 @@
 import { useState } from 'react';
 import swal from 'sweetalert';
+import axios from 'axios';
 
 const Main = () => {
   const [date, setDate] = useState('');
   const [words, setWords] = useState('');
 
-  const handleSubmit = () => {
+
+  const handleSubmit = async () => {
     if (!date || !words) {
       swal('Error', 'Both date and words are required.', 'error');
       return;
     }
-
-    // Perform your submission logic here
-    // For example, you can make an API call to submit the data
-
-    // Reset the form after submission
-    setDate('');
-    setWords('');
-    swal('Success', 'Data submitted successfully.', 'success');
+  
+    try {
+      // Make a POST request to your backend endpoint
+      const response = await axios.post('http://localhost:3001/api/insert', { date, words });
+  
+      // Check the response status
+      if (response.status === 201) {
+        // Reset the form after successful submission
+        setDate('');
+        setWords('');
+        swal('Success', 'Data submitted successfully.', 'success');
+      } else {
+        swal('Error', 'Failed to submit data.', 'error');
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      swal('Error', 'Failed to submit data.', 'error');
+    }
   };
+
+  
 
   return (
     <div className="container">

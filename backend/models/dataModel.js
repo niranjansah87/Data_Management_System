@@ -14,16 +14,7 @@ const createUser = async (date, words) => {
   }
 };
 
-// const getDataByDateWords = async (date, words) => {
-//   const query = `SELECT * FROM data WHERE date = ? AND words = ?`;
 
-//   try {
-//     const [results] = await pool.execute(query, [date, words]);
-//     return results;
-//   } catch (error) {
-//     throw error; // Re-throw for handling in the route handler
-//   }
-// };
 const getDataByDateWords = async (query, params) => {
   try {
     const [results] = await pool.execute(query, params);

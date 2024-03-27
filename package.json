@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "start": "concurrently \"cd backend && nodemon server.js\" \"cd data_entry_system && npm run dev\"",
+    "backend": "cd backend && nodemon server.js",
+    "frontend": "cd data_entry_system && npm run dev"
+  },
   "dependencies": {
     "concurrently": "^8.2.2",
     "vite": "^5.2.6"
