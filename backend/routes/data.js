@@ -16,16 +16,63 @@ router.post("/insert", async (req, res) => {
 });
 
 
-  // Route 2: Search data by word
+// // Route 2: Search data by word
+// router.get("/searchByWord", async (req, res) => {
+//   let { words } = req.query;
+
+//   try {
+//     let query;
+//     let params;
+
+//     if (!words) {
+//       throw new Error('Words must be provided for search.');
+//     }
+
+//     // Convert search query to lowercase
+//     words = words.toLowerCase();
+
+//     // If the length of words is <= 1, use wildcard pattern to match all words
+//     if (words.length <= 1) {
+//       query = 'SELECT * FROM data WHERE LOWER(words) LIKE ?';
+//       params = ['%']; // Wildcard pattern to match all words
+//     } else {
+//       query = 'SELECT * FROM data WHERE LOWER(words) = ?';
+//       params = [words];
+//     }
+
+//     const results = await dataModel.getDataByDateWords(query, params);
+//     if (results.length === 0) {
+//       res.status(200).send('No data found for the provided word.');
+//     } else {
+//       res.status(200).send(results);
+//     }
+//   } catch (error) {
+//     console.error('Error retrieving data:', error);
+//     res.status(500).send('Internal server error');
+//   }
+// });
+
+
+// Route 2: Search data by word
 router.get("/searchByWord", async (req, res) => {
-  const { words } = req.query;
+  let { words } = req.query;
 
   try {
+    let query;
+    let params;
+
     if (!words) {
       throw new Error('Words must be provided for search.');
     }
 
-    const results = await dataModel.getDataByDateWords('SELECT * FROM data WHERE words = ?', [words]);
+    // Convert search query to lowercase
+    words = words.toLowerCase();
+
+    // Use wildcard pattern to match all words containing the provided letters
+    query = 'SELECT * FROM data WHERE LOWER(words) LIKE ?';
+    params = ['%' + words + '%']; // Wildcard pattern to match all words containing the provided letters
+
+    const results = await dataModel.getDataByDateWords(query, params);
     if (results.length === 0) {
       res.status(200).send('No data found for the provided word.');
     } else {

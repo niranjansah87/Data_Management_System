@@ -2,22 +2,29 @@ import { useState } from 'react';
 import swal from 'sweetalert';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
 const SearchByWords = () => {
     const [words, setWords] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    
+    const history = useNavigate();
+
     const handleSubmit = async () => {
         if (!words) {
             swal('Error', 'Words are required.', 'error');
             return;
         }
-    
+
         try {
             const response = await axios.get(`http://localhost:3001/api/searchByWord?words=${words}`);
-    
+            console.log('Response:', response);
+
             if (response.status === 200) {
-                setSearchResult(response.data);
+              setSearchResult(response.data);
+              if (typeof response.data === 'string' && response.data.includes('No data found')) {
+                  swal('Info', response.data, 'info');
+              }
             } else {
+                console.error('Failed to fetch data:', response);
                 swal('Error', 'Failed to fetch data.', 'error');
             }
         } catch (error) {
@@ -25,15 +32,15 @@ const SearchByWords = () => {
             swal('Error', 'Failed to fetch data.', 'error');
         }
     };
-    const history = useNavigate();
+
     const InsertData = () => {
-      history('/'); // Navigate to /searchByWord route
-      
+        history('/'); // Navigate to /searchByWord route
     };
-  
+
     const handleSearchByDate = () => {
-      history('/searchByDate');
+        history('/searchByDate');
     };
+
     return (
         <div className="container">
             <div className="form-title">
@@ -43,13 +50,13 @@ const SearchByWords = () => {
                 <label htmlFor="words">Enter Words</label>
                 <input type="text" id="words" value={words} onChange={(e) => setWords(e.target.value)} />
             </div>
-            
+
             <div className="form-input">
                 <button id="submit" onClick={handleSubmit}>Search</button>
             </div>
             <button className="glow-on-hover" style={{left: '25px'}} type="button" onClick={handleSearchByDate}>Search By Date</button>
             <button className="glow-on-hover" style={{left: '100px', border: '2px solid green' ,margin:'20px'}} type="button" onClick={InsertData}>Insert Data</button>
-            {searchResult.length > 0 && (
+            {Array.isArray(searchResult) && searchResult.length > 0 && (
                 <div className="table-container">
                     <table className="styled-table">
                         <thead>
