@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const router = require('./routes/data');
-const cors = require('cors'); // Import cors middleware
+const cors = require('cors');
 require('dotenv').config();
 
 const port = 3001;
@@ -36,6 +36,6 @@ app.use(cors());
     });
   } catch (error) {
     console.error('Error connecting to database:', error);
-    process.exit(1); // Exit the process on failure
+    process.exit(1); 
   }
 })();

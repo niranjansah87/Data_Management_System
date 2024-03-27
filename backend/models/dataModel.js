@@ -1,16 +1,16 @@
 
 const mysql2 = require('mysql2/promise');
 const dbConfig = require('../config/db.config'); 
-const pool = mysql2.createPool(dbConfig); // Reuse connection pool
+const pool = mysql2.createPool(dbConfig); 
 
 const createUser = async (date, words) => {
   const query = `INSERT INTO data (date, words) VALUES (?, ?)`;
 
   try {
     const [results] = await pool.execute(query, [date, words]);
-    return results.insertId; // Return the newly inserted ID
+    return results.insertId; 
   } catch (error) {
-    throw error; // Re-throw for handling in the route handler
+    throw error; 
   }
 };
 
@@ -20,7 +20,7 @@ const getDataByDateWords = async (query, params) => {
     const [results] = await pool.execute(query, params);
     return results;
   } catch (error) {
-    throw error; // Re-throw for handling in the route handler
+    throw error; 
   }
 };
 module.exports = { createUser, getDataByDateWords };

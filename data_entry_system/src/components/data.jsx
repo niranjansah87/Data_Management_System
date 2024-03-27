@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import swal from 'sweetalert';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
   const [date, setDate] = useState('');
@@ -31,8 +32,15 @@ const Main = () => {
       swal('Error', 'Failed to submit data.', 'error');
     }
   };
+  const history = useNavigate();
+  const handleSearchByWord = () => {
+    history('/searchByWord'); // Navigate to /searchByWord route
+    
+  };
 
-  
+  const handleSearchByDate = () => {
+    history('/searchByDate');
+  };
 
   return (
     <div className="container">
@@ -50,8 +58,8 @@ const Main = () => {
       <div className="form-input">
         <button id="submit" onClick={handleSubmit}>Submit</button>
       </div>
-      <button className="glow-on-hover" style={{left: '25px'}} type="button">Search By Word</button>
-      <button className="glow-on-hover" style={{left: '120px', border: '2px solid green'}} type="button">Search by Date</button>
+      <button className="glow-on-hover" style={{left: '25px'}} type="button" onClick={handleSearchByWord}>Search By Word</button>
+      <button className="glow-on-hover" style={{left: '120px', border: '2px solid green'}} type="button" onClick={handleSearchByDate}>Search by Date</button>
     </div>
   );
 };
