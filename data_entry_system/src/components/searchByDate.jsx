@@ -5,16 +5,16 @@ import { useNavigate } from 'react-router-dom';
 const SearchByDate = () => {
     const [date, setDate] = useState('');
     const [searchResult, setSearchResult] = useState([]);
-    
+
     const handleSubmit = async () => {
         if (!date) {
             swal('Error', 'Date is required.', 'error');
             return;
         }
-    
+
         try {
             const response = await axios.get(`http://localhost:3001/api/searchByDate?date=${date}`);
-    
+
             if (response.status === 200) {
                 setSearchResult(response.data);
             } else {
@@ -28,12 +28,12 @@ const SearchByDate = () => {
 
     const history = useNavigate();
     const InsertData = () => {
-      history('/'); // Navigate to /searchByWord route
-      
+        history('/'); // Navigate to /searchByWord route
+
     };
-  
+
     const handleSearchByWord = () => {
-      history('/searchByWord');
+        history('/searchByWord');
     };
     return (
         <div className="container">
@@ -44,12 +44,12 @@ const SearchByDate = () => {
                 <label htmlFor="date">Enter Date</label>
                 <input type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
-            
+
             <div className="form-input">
                 <button id="submit" onClick={handleSubmit}>Search</button>
             </div>
-            <button className="glow-on-hover" style={{left: '25px'}} type="button" onClick={handleSearchByWord}>Search By Words</button>
-      <button className="glow-on-hover" style={{left: '100px', border: '2px solid green' ,margin:'20px'}} type="button" onClick={InsertData}>Insert Data</button>
+            <button className="glow-on-hover" style={{ left: '25px' }} type="button" onClick={handleSearchByWord}>Search By Words</button>
+            <button className="glow-on-hover" style={{ left: '100px', border: '2px solid green', margin: '20px' }} type="button" onClick={InsertData}>Insert Data</button>
             {searchResult.length > 0 && (
                 <div className="table-container">
                     <table className="styled-table">

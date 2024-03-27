@@ -13,11 +13,11 @@ const Main = () => {
       swal('Error', 'Both date and words are required.', 'error');
       return;
     }
-  
+
     try {
       // Make a POST request to your backend endpoint
       const response = await axios.post('http://localhost:3001/api/insert', { date, words });
-  
+
       // Check the response status
       if (response.status === 201) {
         // Reset the form after successful submission
@@ -35,7 +35,7 @@ const Main = () => {
   const history = useNavigate();
   const handleSearchByWord = () => {
     history('/searchByWord'); // Navigate to /searchByWord route
-    
+
   };
 
   const handleSearchByDate = () => {
@@ -58,8 +58,8 @@ const Main = () => {
       <div className="form-input">
         <button id="submit" onClick={handleSubmit}>Submit</button>
       </div>
-      <button className="glow-on-hover" style={{left: '25px'}} type="button" onClick={handleSearchByWord}>Search By Word</button>
-      <button className="glow-on-hover" style={{left: '120px', border: '2px solid green'}} type="button" onClick={handleSearchByDate}>Search by Date</button>
+      <button className="glow-on-hover" style={{ left: '25px' }} type="button" onClick={handleSearchByWord}>Search By Word</button>
+      <button className="glow-on-hover" style={{ left: '120px', border: '2px solid green' }} type="button" onClick={handleSearchByDate}>Search by Date</button>
     </div>
   );
 };
