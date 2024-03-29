@@ -2,9 +2,11 @@ import { useState } from 'react';
 import swal from 'sweetalert';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
 const SearchByDate = () => {
     const [date, setDate] = useState('');
     const [searchResult, setSearchResult] = useState([]);
+    const history = useNavigate();
 
     const handleSubmit = async () => {
         if (!date) {
@@ -17,24 +19,26 @@ const SearchByDate = () => {
 
             if (response.status === 200) {
                 setSearchResult(response.data);
+                if (Array.isArray(response.data) && response.data.length === 0) {
+                    swal('Info', 'Failed to fetch data.', 'info');
+                }
             } else {
                 swal('Error', 'Failed to fetch data.', 'error');
             }
         } catch (error) {
             console.error('Error fetching data:', error);
-            swal('Error', 'Failed to fetch data.', 'error');
+            swal('Error', 'No data found for the provided date.', 'error');
         }
-    };
-
-    const history = useNavigate();
-    const InsertData = () => {
-        history('/'); // Navigate to /searchByWord route
-
     };
 
     const handleSearchByWord = () => {
         history('/searchByWord');
     };
+
+    const InsertData = () => {
+        history('/'); // Navigate to /searchByWord route
+    };
+
     return (
         <div className="container">
             <div className="form-title">
@@ -50,7 +54,7 @@ const SearchByDate = () => {
             </div>
             <button className="glow-on-hover" style={{ left: '25px' }} type="button" onClick={handleSearchByWord}>Search By Words</button>
             <button className="glow-on-hover" style={{ left: '100px', border: '2px solid green', margin: '20px' }} type="button" onClick={InsertData}>Insert Data</button>
-            {searchResult.length > 0 && (
+            {Array.isArray(searchResult) && searchResult.length > 0 && (
                 <div className="table-container">
                     <table className="styled-table">
                         <thead>

@@ -48,17 +48,36 @@ router.get("/searchByWord", async (req, res) => {
 });
 
 // Route 3: Search data by date
+// router.get("/searchByDate", async (req, res) => {
+//   const { date } = req.query;
+
+//   try {
+//     if (!date) {
+//       throw new Error('Date must be provided for search.');
+//     }
+
+//     const results = await dataModel.getDataByDateWords('SELECT * FROM data WHERE date = ?', [date]);
+//     if (results.length === 0) {
+//       res.status(200).send('No data found for the provided date.');
+//     } else {
+//       res.status(200).send(results);
+//     }
+//   } catch (error) {
+//     console.error('Error retrieving data:', error);
+//     res.status(500).send('Internal server error');
+//   }
+// });
+
+// Route 3: Search data by date
 router.get("/searchByDate", async (req, res) => {
   const { date } = req.query;
-
   try {
     if (!date) {
       throw new Error('Date must be provided for search.');
     }
-
     const results = await dataModel.getDataByDateWords('SELECT * FROM data WHERE date = ?', [date]);
     if (results.length === 0) {
-      res.status(200).send('No data found for the provided date.');
+      return res.status(404).json({ error: 'No data found for the provided date.' });
     } else {
       res.status(200).send(results);
     }
@@ -67,6 +86,4 @@ router.get("/searchByDate", async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
-
-
 module.exports = router;

@@ -7,6 +7,7 @@ const Main = () => {
   const [date, setDate] = useState('');
   const [words, setWords] = useState('');
 
+  const history = useNavigate();
 
   const handleSubmit = async () => {
     if (!date || !words) {
@@ -14,28 +15,39 @@ const Main = () => {
       return;
     }
 
-    try {
-      // Make a POST request to your backend endpoint
-      const response = await axios.post('http://localhost:3001/api/insert', { date, words });
+    // Show confirmation dialog
+    const confirmSubmission = await swal({
+      title: 'Are you sure?',
+      text: 'Is the data correct?',
+      icon: 'warning',
+      buttons: ['No', 'Yes'],
+      dangerMode: true,
+    });
 
-      // Check the response status
-      if (response.status === 201) {
-        // Reset the form after successful submission
-        setDate('');
-        setWords('');
-        swal('Success', 'Data submitted successfully.', 'success');
-      } else {
+    // If user confirms submission, proceed
+    if (confirmSubmission) {
+      try {
+        // Make a POST request to your backend endpoint
+        const response = await axios.post('http://localhost:3001/api/insert', { date, words });
+
+        // Check the response status
+        if (response.status === 201) {
+          // Reset the form after successful submission
+          setDate('');
+          setWords('');
+          swal('Success', 'Data submitted successfully.', 'success');
+        } else {
+          swal('Error', 'Failed to submit data.', 'error');
+        }
+      } catch (error) {
+        console.error('Error submitting data:', error);
         swal('Error', 'Failed to submit data.', 'error');
       }
-    } catch (error) {
-      console.error('Error submitting data:', error);
-      swal('Error', 'Failed to submit data.', 'error');
     }
   };
-  const history = useNavigate();
+
   const handleSearchByWord = () => {
     history('/searchByWord'); // Navigate to /searchByWord route
-
   };
 
   const handleSearchByDate = () => {
