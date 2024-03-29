@@ -31,6 +31,16 @@ app.use(cors());
     // Define routes here (assuming they're in a separate file, e.g., routes/data.js)
     app.use('/api', router);
 
+
+    app.get("/*",function(req,res) {
+      res.sendFile(path.join(__dirname,'../data_entry_system/dist/index.html'),
+      function (err){
+        if(err){
+          res.status(500).send(err)
+        }
+      });
+    
+    });
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

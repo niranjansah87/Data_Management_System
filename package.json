@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "concurrently \"cd backend && nodemon server.js\" \"cd data_entry_system && npm run dev\"",
+    "start":"cd backend && nodemon server.js",
+    "run": "concurrently \"cd backend && nodemon server.js\" \"cd data_entry_system && npm run dev\"",
     "backend": "cd backend && nodemon server.js",
     "frontend": "cd data_entry_system && npm run dev"
   },
